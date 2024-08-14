@@ -85,7 +85,7 @@ INSERT INTO client VALUES
 (400, 'Dunmore Highschool', 2),
 (401, 'Lackawana Country', 2),
 (402, 'FedEx', 3),
-(403, 'John Daly Law-LLC', 3),
+(403, 'John Daly Law, LLC', 3),
 (404, 'Scranton Whitepages', 2),
 (405, 'Times Newspaper', 3),
 (406, 'FedEx', 2);
@@ -123,3 +123,31 @@ WHERE emp_id = 102;
 UPDATE employee
 SET branch_id = 3
 WHERE emp_id = 106;
+
+-- *********************** SELECTING COLUMNS *********************** --
+
+SELECT * FROM employee ORDER BY salary DESC;
+SELECT * FROM employee LIMIT 5;
+
+SELECT first_name,last_name FROM employee;
+SELECT first_name AS forename, last_name AS surname FROM employee;
+SELECT DISTINCT gender FROM employee;
+
+SELECT COUNT(emp_id) FROM employee;
+SELECT COUNT(emp_id) FROM employee WHERE gender = 'F' AND birthday > '1970-01-01';
+
+SELECT AVG(salary) FROM employee;
+SELECT SUM(salary) FROM employee;
+
+SELECT COUNT(gender), gender FROM employee GROUP BY gender;
+SELECT SUM(total_sales), emp_id From works_with GROUP BY emp_id;
+
+-- *********************** WILDCARDS *********************** --
+
+-- % = any # of characters 
+-- _ = one characters 
+
+SELECT * FROM client WHERE client_name LIKE '%LLC%';
+SELECT * FROM branch_supplier WHERE supplier_name LIKE '%Label%';
+SELECT * FROM employee WHERE birthday LIKE '%____-10%'; -- 4 digit year so 4 _ for year and - and 10 for month
+SELECT * FROM client WHERE client_name LIKE '%school%';
