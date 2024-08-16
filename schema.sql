@@ -200,3 +200,59 @@ WHERE branch_id = (
 
 -- *********************** ON DELETE *********************** --
 
+-- ON DELETE SET NULL : if we delete a data, the row will be set to null
+-- ON DELETE CASCADE : delete entirely 
+
+-- *********************** TRIGGER *********************** --
+
+-- trigger : define a certain action that should happen when a certain operation get performed on the database
+-- delimiter : changes the mysql delimiter which is ; to sth else
+-- when defining triggers ';' indicates the end of a SQl statment, in order to indicate the end of trigger we need to change the delimiter to e.g $$
+
+CREATE TABLE trigger_test (
+  message VARCHAR(100)
+);
+
+-- delimiter is not defined on text editors, it should be don using command line
+DELIMITER $$
+CREATE
+    TRIGGER my_trigger BEFORE INSERT
+    ON employee
+    FOR EACH ROW BEGIN
+        INSERT INTO trigger_test VALUES('added new employee');
+    END$$
+DELIMITER ; -- we have to change the delimiter to ';' again
+ 
+INSERT INTO employee VALUES(109, 'Oscar', 'Martinez', '1968-02-19', 'M', 69000, 106, 3);
+
+
+DELIMITER $$
+CREATE
+    TRIGGER my_trigger_1 BEFORE INSERT
+    ON employee
+    FOR EACH ROW BEGIN
+        INSERT INTO trigger_test VALUES(NEW.first_name);
+    END$$
+DELIMITER ;
+
+INSERT INTO employee VALUES(110, 'Kevin', 'Malone', '1978-02-19', 'M', 69000, 106, 3);
+
+
+DELIMITER $$
+CREATE
+    TRIGGER my_trigger_2 BEFORE INSERT
+    ON employee
+    FOR EACH ROW BEGIN
+        IF NEW.gender = 'M' THEN
+              INSERT INTO trigger_test VALUES('added male employee');
+        ELSEIF NEW.gender = 'F' THEN
+              INSERT INTO trigger_test VALUES('added female employee');
+        ELSE
+              INSERT INTO trigger_test VALUES('added other employee');
+        END IF;
+    END$$
+DELIMITER ;
+
+INSERT INTO employee VALUES(111, 'Pam', 'Beesly', '1988-02-19', 'F', 69000, 106, 3);
+
+SELECT * from trigger_test;
