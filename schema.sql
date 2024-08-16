@@ -151,3 +151,52 @@ SELECT * FROM client WHERE client_name LIKE '%LLC%';
 SELECT * FROM branch_supplier WHERE supplier_name LIKE '%Label%';
 SELECT * FROM employee WHERE birthday LIKE '%____-10%'; -- 4 digit year so 4 _ for year and - and 10 for month
 SELECT * FROM client WHERE client_name LIKE '%school%';
+
+-- *********************** UNIONS *********************** --
+
+SELECT first_name AS names FROM employee
+UNION
+SELECT branch_name FROM branch;
+
+SELECT salary AS total_spent_money FROM employee
+UNION
+SELECT total_sales FROM works_with;
+
+-- *********************** JOINS *********************** --
+
+/* inner join: combining rows from 2 or more tables */
+SELECT emp_id, first_name, last_name, branch_name
+FROM employee
+JOIN branch
+ON employee.emp_id = branch.mgr_id;
+
+/* left join: all of the rows in the employee table are getting included, 
+but only the rows in the branch table that match are getting included */
+SELECT emp_id, first_name, last_name, branch_name
+FROM employee
+LEFT JOIN branch
+ON employee.emp_id = branch.mgr_id;
+
+/* right join: getting all the rows from right table */
+SELECT emp_id, first_name, last_name, branch_name
+FROM employee
+RIGHT JOIN branch
+ON employee.emp_id = branch.mgr_id;
+
+/* full join: getting all the tables joined together */
+
+-- *********************** NESTED QUERIES *********************** --
+
+SELECT first_name, last_name 
+FROM employee 
+WHERE emp_id IN 
+  (SELECT emp_id FROM works_with WHERE total_sales > 30000);
+
+SELECT client_name 
+FROM client 
+WHERE branch_id = (
+  SELECT branch_id FROM branch WHERE mgr_id = 102 LIMIT 1
+  );
+
+-- *********************** ON DELETE *********************** --
+
